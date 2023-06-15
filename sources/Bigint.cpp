@@ -32,6 +32,9 @@ Bigint::Bigint(const std::string& str)
 
 std::string Bigint::toString() const
 {
+    if (isError())
+        return "NaN";
+
     if (!size())
         return "0";
 
@@ -49,6 +52,9 @@ std::string Bigint::toString() const
 
 bool Bigint::operator<(const Bigint& other) const
 {
+    if (isError() || other.isError())
+        return false;
+
     if (size() != other.size())
         return size() < other.size();
 
@@ -105,6 +111,7 @@ Bigint Bigint::operator-(const Bigint& op2) const
 
 void Bigint::trimLeadingZeros()
 {
+    /* Количество незначащих нулей */
     int leadingZeros = (std::find_if(m_data.rbegin(), m_data.rend(),
                            [](std::bitset<4> d) { return d.to_ulong() != 0; }))
         - m_data.rbegin();
@@ -127,13 +134,16 @@ Bigint Bigint::basicSubstract(const Bigint& op2) const
     for (int i = 0; i < std::max(op2.size(), size()); i++) {
         int currentDigitsSum = getLastDigit(i) - op2.getLastDigit(i) - carry;
 
+        /* Перенос из старших разрядов */
         carry = currentDigitsSum < 0;
+
         if (currentDigitsSum < 0)
             result.m_data.push_back(10 - abs(currentDigitsSum) % 10);
         else
             result.m_data.push_back(currentDigitsSum % 10);
     }
 
+    /* Добавляем новую цифру, если самые старшие разряды дали перенос */
     if (carry) {
         result.m_data.push_back(carry);
     }
@@ -152,10 +162,13 @@ Bigint Bigint::basicAdd(const Bigint& op2) const
     for (int i = 0; i < std::max(op2.size(), size()); i++) {
         unsigned int currentDigitsSum = getLastDigit(i) + op2.getLastDigit(i) + carry;
 
+        /* Перенос в старшие разряды */
         carry = currentDigitsSum > 9;
+
         result.m_data.push_back(currentDigitsSum % 10);
     }
 
+    /* Добавляем новую цифру, если самые старшие разряды дали перенос */
     if (carry) {
         result.m_data.push_back(carry);
     }

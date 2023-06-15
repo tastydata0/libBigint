@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.0 )
 
-project( Bigint VERSION 1.1.0 )
+project( Bigint VERSION 1.2.0 )
 
 add_library(${PROJECT_NAME} SHARED
     sources/Bigint.cpp include/Bigint.h
