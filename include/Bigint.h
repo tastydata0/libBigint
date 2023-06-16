@@ -1,3 +1,6 @@
+#ifndef BIGINT_H
+#define BIGINT_H
+
 #include <algorithm>
 #include <bitset>
 #include <string>
@@ -189,3 +192,5 @@ private:
     ///
     Error m_error = Error::NoError;
 };
+
+#endif // BIGINT_H
