@@ -1,4 +1,4 @@
-#include "../include/Bigint.h"
+#include <include/Bigint.h>
 
 Bigint::Bigint(const std::string& str)
 {
